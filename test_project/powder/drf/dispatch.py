@@ -1,4 +1,4 @@
-from typing import TypeGuard, TypeVar, TypeAlias, Type, Literal, Callable
+from typing import  TypeVar,  Callable
 from rest_framework.serializers import BaseSerializer
 from functools import partial
 from enum import Enum
@@ -33,12 +33,8 @@ def _construct_serializer(get_serializer_class: Callable[[Action], type[T]], *ar
 
 _T = TypeVar("_T")
 
-def _fall_back(instance: _T | None, rhs: _T) -> _T:
-    if not instance:
-        return rhs
-
-    return rhs
-
+def _fall_back(instance: _T | None, fallback: _T) -> _T:
+    return instance or fallback
 
 
 def dispatch_serializer(
@@ -49,7 +45,7 @@ def dispatch_serializer(
     fallback_serializer:    type[T]
 ) -> Callable[..., T]:
 
-    _safe = partial(_fall_back, rhs=fallback_serializer)
+    _safe = partial(_fall_back, fallback=fallback_serializer)
 
     def get_serializer_class(action: Action) -> type[T]:
         serializer_class: type[T] = fallback_serializer
