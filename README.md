@@ -1,4 +1,4 @@
-# Powder Django/DjangoRestFramework extension
+# Powder Django/DRF extension
 
 Adding missing functionalities to Django and DjangoRestFramework
 
