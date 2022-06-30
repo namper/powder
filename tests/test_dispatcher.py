@@ -40,5 +40,3 @@ class TestDispatcher(TestCase):
         response = view(
             request=request
         ) # type: ignore
-
-        print(response)

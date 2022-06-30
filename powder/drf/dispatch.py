@@ -23,13 +23,6 @@ def _extract_request_action(context: dict | None) -> Action:
 
 
 
-def _construct_serializer(get_serializer_class: Callable[[Action], type[T]], *args, **kwargs) -> T:
-    serialzier_class = get_serializer_class(
-        _extract_request_action(kwargs.get('context'))
-    )
-    return serialzier_class(*args, **kwargs)
-
-
 
 _T = TypeVar("_T")
 
@@ -40,13 +33,24 @@ def _fall_back(instance: _T | None, fallback: _T) -> _T:
 
 DispatcherProxy: TypeAlias =  Callable[..., T]
 
+
+def serializer_constructor(get_serializer_class: Callable[[Action], type[T]]) -> DispatcherProxy:
+    def _construct_serializer(*args, **kwargs) -> T:
+        serialzier_class = get_serializer_class(
+            _extract_request_action(kwargs.get('context'))
+        )
+        return serialzier_class(*args, **kwargs)
+
+    return _construct_serializer
+
+
 def dispatch_serializer(
-    *,
-    list_serializer:        type[T] | None = None,
-    retrieve_serializer:    type[T] | None = None,
-    create_serializer:      type[T] | None = None,
-    fallback_serializer:    type[T]
-) -> DispatcherProxy:
+        *,
+        list_serializer:        type[T] | None = None,
+        retrieve_serializer:    type[T] | None = None,
+        create_serializer:      type[T] | None = None,
+        fallback_serializer:    type[T]
+    ) -> DispatcherProxy:
 
     _safe = partial(_fall_back, fallback=fallback_serializer)
 
@@ -62,9 +66,5 @@ def dispatch_serializer(
         return serializer_class
 
 
-    return partial(
-        _construct_serializer,
-        get_serializer_class=get_serializer_class
-    )
-
+    return serializer_constructor(get_serializer_class)
 
