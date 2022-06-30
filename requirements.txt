@@ -1,0 +1,6 @@
+# The base set of requirements for powder is 
+# Rest Framework + Django
+
+
+-r requirements/requirements-testing.txt
+-r requirements/requirements-packaging.txt
