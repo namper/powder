@@ -6,6 +6,6 @@ Adding missing functionalities to Django and DjangoRestFramework
 
 Milestone
 - [x] Serializer dispatcher
-- [ ] TypeSafe with respect to ViewSet 
+- [x] TypeSafe with respect to ViewSet 
 - [ ] I/O Serialization Support
 - [ ] Other Ideas ...
